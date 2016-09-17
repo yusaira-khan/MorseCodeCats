@@ -1,4 +1,9 @@
 //Buffer Array object
+#define ConnectThreshold 900
+#define DisconnectThreshold 400
+#define ShortDuration  300
+#define LongDuration 1000
+
 class BufferArray{
   public:
     BufferArray(){}
