@@ -1,30 +1,39 @@
+//Buffer Array object
+class BufferArray{
+  public:
+    BufferArray(){}
+    int buff[10] = {0,0,0,0,0,0,0,0,0,0};
+    int state = 0;
+
+    void updateArray(int newValue){
+      state++;
+      if(state>=10){ state = 0; }
+      buff[state] = newValue;
+    }
+    int averageArray(){
+      int sum = 0;
+      for(int i=0; i<10; i++){ sum = sum + buff[i]; }
+      return sum/10;
+    }
+  
+};
+
+
+//MAIN CODE
+
 int readVal;
-int[] buff;
-int state;
+BufferArray* buff;
 
 void setup() {
   Serial.begin(9600);
   readVal = 0;
-  buff = {0,0,0,0,0,0,0,0,0,0};
-  state = 0;
+  buff = new BufferArray();
 }
 
 void loop() {
-  updateArray(analogRead(0));
+  buff->updateArray(analogRead(0));
 
   
-  Serial.println(averageArray);
+  Serial.println(buff->averageArray());
   delay(100);
 }
-
-void updateArray(int newValue){
-  state++;
-  if(state>=10){ state = 0; }
-  int[state] = newValue;
-}
-int averageArray(){
-  int sum = 0;
-  for(int i=0; i<10; i++){ sum = sum + buff[i]; }
-  return sum;
-}
-
