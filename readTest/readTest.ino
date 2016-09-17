@@ -1,8 +1,10 @@
 //Buffer Array object
-#define ConnectThreshold 900
-#define DisconnectThreshold 400
-#define ShortDuration  300
-#define LongDuration 1000
+#define ConnectThreshold 900 //V
+#define DisconnectThreshold 400 //V
+
+#define ShortCycles  1 //3*100
+#define LongCycles 10 //10*100
+#define Cycle 50 //ms
 
 class BufferArray{
   public:
@@ -23,22 +25,51 @@ class BufferArray{
   
 };
 
-
+void LEDIndicator(int hold){
+    if(hold>=ShortCycles && hold<LongCycles){ analogWrite(5, 100); }
+    else if(hold>=LongCycles){analogWrite(5, 250);}
+    else {analogWrite(5,0);}
+}
 //MAIN CODE
 
-int readVal;
 BufferArray* buff;
+int holdDuration;
 
 void setup() {
   Serial.begin(9600);
-  readVal = 0;
   buff = new BufferArray();
+  holdDuration = 0;
 }
 
 void loop() {
-  buff->updateArray(analogRead(0));
-
+  int start = millis();
   
-  Serial.println(buff->averageArray());
-  delay(100);
+  buff->updateArray(analogRead(0));
+  int readValue = analogRead(0);
+//  int readValue = buff->averageArray();
+
+  if(readValue>ConnectThreshold){ //Pushed
+    //Serial.println("Pushed");
+    holdDuration++;
+    
+  } else{
+  if(readValue<DisconnectThreshold){ //Released
+    if(holdDuration>=ShortCycles && holdDuration<LongCycles){//Short
+      Serial.write(".");
+    } else{
+      if(holdDuration>=LongCycles){//Long
+        Serial.write("-");
+      }
+    }
+    holdDuration = 0;
+    //Reset caclulators and output whether it was short or long
+  }
+  }
+
+  LEDIndicator(holdDuration);
+  
+  //Make sure ticks are regular and non negative. 
+  int delayTime = Cycle-(millis()-start);
+  if(delayTime<0) delayTime=0;
+  delay(delayTime);
 }
