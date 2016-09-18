@@ -36,6 +36,9 @@ thread.start()
 #DO your stuff here
 letter = getRandomLetter()
 print("What is the correct morse code for '"+letter+"' ?\n")
+def writeS(num):
+	serializer = serial.Serial('/dev/tty.usbmodem1421', 9600)
+	serializer.write(int(num))
 
 try:
 	while 1:
@@ -48,19 +51,16 @@ try:
 		code = x[:-1]
 	if code[-1] == '\r' or code[-1] == '\n':
 		code = code[:-1]
-	if(isCorrectCode(letter,code)):
+	correctness=isCorrectCode(letter,code)
+	if(correctness):
 		print "You are a CAT!"
 	else:
 		print "You're not a cat. Go *** yourself"
-		#os._exit(1)
-	#print code
-	#x2 = translate(x)
-	#log(x2)
-
+	writeS(correctness)
 	#print("Received: {}, Translated: {}".format(code, code))
 	event.clear()
 	#thread.join()
-	print "woo"
+	#print "woo"
 	sys.exit()		#time.sleep(1)
 except Exception as e:
 	print str(e)

@@ -77,3 +77,4 @@ insert into words values
   (34,'7'),
   (35,'8'),
   (36,'9');
+create table results (code String primary key, correct int, incorrect int);
