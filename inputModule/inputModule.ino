@@ -41,6 +41,17 @@ void LEDIndicator(int hold) {
     analogWrite(5, 0);
   }
 }
+
+void AnalyseSerial(){
+  if(Serial.available()>0){ //Messages inbound
+    int incoming = Serial.read();
+    if(incoming == 0){ //Got a question wrong
+      analogWrite(6, 255);
+      delay(40);
+      analogWrite(6,0);
+    }
+  }
+}
 //MAIN CODE
 
 BufferArray* buff;
@@ -85,6 +96,7 @@ void loop() {
   if(charPeriod>0){ charPeriod++; }
 
   LEDIndicator(holdDuration);
+  AnalyseSerial();
 
   //Make sure ticks are regular and non negative.
   int delayTime = Cycle - (millis() - start);
