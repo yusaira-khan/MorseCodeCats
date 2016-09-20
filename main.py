@@ -38,7 +38,7 @@ letter = getRandomLetter()
 print("What is the correct morse code for '"+letter+"' ?\n")
 def writeS(num):
 	serializer = serial.Serial('/dev/tty.usbmodem1421', 9600)
-	serializer.write(int(num))
+	serializer.write(str(int(num)))
 
 try:
 	while 1:
@@ -51,11 +51,12 @@ try:
 		code = x[:-1]
 	if code[-1] == '\r' or code[-1] == '\n':
 		code = code[:-1]
+	print "You entered :", code
 	correctness=isCorrectCode(letter,code)
 	if(correctness):
-		print "You are a CAT!"
+		print "That is correct! You are a CAT!"
 	else:
-		print "You're not a cat. Go *** yourself"
+		print "INCORRECT! You're not a cat. Go *** yourself"
 	writeS(correctness)
 	#print("Received: {}, Translated: {}".format(code, code))
 	event.clear()
